@@ -1,0 +1,16 @@
+package user
+
+import "time"
+
+type User struct {
+	ID           int `json:"user_id" gorm:"column:user_id"`
+	Name              string
+	Occupasion        string
+	Email             string
+	Password_hash     string
+	Avatar_field_name string
+	Role              string
+	Token              string
+	CreatedAt         time.Time
+	UpdatedAt         time.Time
+}
