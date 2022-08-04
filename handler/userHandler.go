@@ -3,7 +3,6 @@ package handler
 import (
 	"funding-api/helper"
 	"funding-api/user"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -37,7 +36,6 @@ func (h *userHandler) RegisterUser(c *gin.Context) {
 	
 	newUser, err := h.userService.RegisterUser(input)
 	if err != nil {
-		log.Fatal("Data is Not Created!!")
 		response := helper.APIResponse("Failed Regester Account", http.StatusBadRequest, "ERROR", nil)
 		c.JSON(http.StatusBadRequest, response)
 		return
@@ -49,4 +47,34 @@ func (h *userHandler) RegisterUser(c *gin.Context) {
 	response := helper.APIResponse("Account has been registered", http.StatusOK, "success", formatter)
 
 	c.JSON(http.StatusOK, response)
+}
+
+func (h *userHandler) Login(c *gin.Context) {
+	// User memasuki input (email & password)
+	// input ditangkap handler
+	// mapping dari input user ke input struct
+
+	 var input user.LoginInput
+	 err := c.ShouldBindJSON(&input)
+	if err != nil {
+		helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": err.Error()}
+
+		response := helper.APIResponse("Login Validation Failed", http.StatusUnprocessableEntity, "ERROR", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	newUser, err := h.userService.Login(input)
+	if err != nil {
+		helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": err.Error()}
+
+		response := helper.APIResponse("Login Input Failed", http.StatusUnprocessableEntity, "ERROR", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+	}
+
+	formatter := user.FormatUser(newUser, "TokenAsal")
+
+	helper.APIResponse("Login Successfull", http.StatusUnprocessableEntity, "SUCCESS", formatter)
 }
