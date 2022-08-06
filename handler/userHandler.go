@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"funding-api/auth"
 	"funding-api/helper"
 	"funding-api/user"
 	"net/http"
@@ -11,10 +12,11 @@ import (
 
 type userHandler struct {
 	userService user.Service
+	authService auth.Service
 }
 
-func NewUserHandler(userService user.Service) *userHandler {
-	return &userHandler{userService}
+func NewUserHandler(userService user.Service, authService auth.Service) *userHandler {
+	return &userHandler{userService, authService}
 }
 
 func (h *userHandler) RegisterUser(c *gin.Context) {
@@ -42,8 +44,15 @@ func (h *userHandler) RegisterUser(c *gin.Context) {
 		return
 	}
 
-	// formatter := user.FormatUser(newUser, "TOKEN acak")
-	formatter := user.FormatUser(newUser, "TokenNgasal")
+	token, err := h.authService.GenerateToken(newUser.ID)
+	if err != nil {
+		response := helper.APIResponse("Failed Generate Token", http.StatusNetworkAuthenticationRequired, "Token Error", nil)
+		c.JSON(http.StatusNetworkAuthenticationRequired, response)
+		return
+	}
+	
+	// formatter := user.FormatUser(newUser, "TokenNgasal")
+	formatter := user.FormatUser(newUser, token)
 
 	response := helper.APIResponse("Account has been registered", http.StatusOK, "success", formatter)
 
@@ -66,7 +75,7 @@ func (h *userHandler) Login(c *gin.Context) {
 		return
 	}
 
-	newUser, err := h.userService.Login(input)
+	loggedIn, err := h.userService.Login(input)
 	if err != nil {
 		helper.FormatValidationError(err)
 		errorMessage := gin.H{"errors": err.Error()}
@@ -75,7 +84,15 @@ func (h *userHandler) Login(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, response)
 	}
 
-	formatter := user.FormatUser(newUser, "TokenAsal")
+	token, err := h.authService.GenerateToken(loggedIn.ID)
+	if err != nil {
+		response := helper.APIResponse("Failed Generate Token", http.StatusNetworkAuthenticationRequired, "Token Error", nil)
+		c.JSON(http.StatusNetworkAuthenticationRequired, response)
+		return
+	}
+	
+	// formatter := user.FormatUser(newUser, "TokenNgasal")
+	formatter := user.FormatUser(loggedIn, token)
 
 	response := helper.APIResponse("Login Successfull", http.StatusUnprocessableEntity, "SUCCESS", formatter)
 	c.JSON(http.StatusOK, response)
