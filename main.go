@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"funding-api/auth"
 	"funding-api/handler"
 	"funding-api/user"
@@ -21,6 +22,19 @@ func main() {
 	userRepository := user.NewRepositoryDB(db)
 	userService := user.NewService(userRepository)
 	authService := auth.NewService()
+
+	token, err := authService.ValidateToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyMH0.DAZv9a5nwrom1zKf_n6A4CjHkms77L7u01eBvxui78")
+	if err!= nil {
+		fmt.Println("ERRROR")
+		fmt.Println("ERRROR")
+	}
+
+	if token.Valid {
+		fmt.Println("VALID")
+		fmt.Println("VALID")
+	} else {
+		fmt.Println("NOT VALID")
+	}
 
 	userHandler := handler.NewUserHandler(userService, authService)
 
