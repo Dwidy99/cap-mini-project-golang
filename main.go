@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"funding-api/auth"
 	"funding-api/campaign"
 	"funding-api/handler"
@@ -31,10 +30,8 @@ func main() {
 	campaignService := campaign.NewService(campaignRepository)
 	authService := auth.NewService()
 
-	campaigns, _ := campaignService.GetCampaigns(15)
-	fmt.Println(len(campaigns))
-
 	userHandler := handler.NewUserHandler(userService, authService)
+	campaignHandler := handler.NewCampaignHandler(campaignService)
 
 	router := gin.Default()
 	api := router.Group("/api/v1/users")
@@ -42,6 +39,8 @@ func main() {
 	api.POST("/login", userHandler.Login)
 	api.POST("/emailChecker", userHandler.CheckEmailIsAvailability)
 	api.POST("/avatars", authMiddleware(authService, userService), userHandler.UploadAvatar)
+
+	api.GET("/campaigns", campaignHandler.GetCampaigns)
 
 	router.Run()
 

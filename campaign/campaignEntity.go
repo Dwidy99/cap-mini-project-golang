@@ -9,7 +9,7 @@ type Campaign struct {
 	ShortDescription string
 	Description string
 	Perks            string
-	BeckerCount      int
+	BeckerCount      int `json:"backer_count" gorm:"column:backer_count"`
 	GoalAmount       int
 	CurrentAmount    int
 	slug             string
