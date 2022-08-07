@@ -12,7 +12,7 @@ type Campaign struct {
 	BeckerCount      int `json:"backer_count" gorm:"column:backer_count"`
 	GoalAmount       int
 	CurrentAmount    int
-	slug             string
+	Slug             string
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
 	CampaignImages []CampaignImage
