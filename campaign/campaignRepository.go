@@ -1,9 +1,11 @@
 package campaign
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type Repository interface {
-	FinAll() ([]Campaign, error)
+	GetCampaigns() ([]Campaign, error)
 	FindByUserID(userID int) ([]Campaign, error)
 }
 
@@ -15,7 +17,7 @@ func NewRepositoryDB(db *gorm.DB) *repository {
 	return &repository{db}
 }
 
-func (r *repository) FindAll() ([]Campaign, error) {
+func (r *repository) GetCampaigns() ([]Campaign, error) {
 	var campaigns []Campaign
 
 	err := r.db.Find(&campaigns).Error
