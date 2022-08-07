@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"funding-api/auth"
+	"funding-api/campaign"
 	"funding-api/handler"
 	"funding-api/helper"
 	"funding-api/user"
@@ -23,10 +25,28 @@ func main() {
 	}
 	
 	userRepository := user.NewRepositoryDB(db)
+	campaignRepository := campaign.NewRepositoryDB(db)
+
+	// campaigns, err := campaignRepository.FindAll()
+	campaigns, err := campaignRepository.FindByUserID(20)
+	fmt.Println("debug")
+	fmt.Println("debug")
+	fmt.Println("debug")
+	fmt.Println(len(campaigns))
+
+	for _, campaign := range campaigns {
+		fmt.Println("Nama campaign: ", campaign.CampaignName)
+		if len(campaign.CampaignImages) > 0 {
+			fmt.Println("ID campaign: ", campaign.ID)
+			fmt.Println("Campaign Image: ", campaign.CampaignImages[0].FileName)
+			fmt.Println("Gambar campaign: ", campaign.CampaignImages)
+		}
+	}
+	
 	userService := user.NewService(userRepository)
 	authService := auth.NewService()
-	userHandler := handler.NewUserHandler(userService, authService)
 
+	userHandler := handler.NewUserHandler(userService, authService)
 
 	router := gin.Default()
 	api := router.Group("/api/v1/users")
