@@ -1,8 +1,10 @@
 package handler
 
 import (
+	"fmt"
 	"funding-api/campaign"
 	"funding-api/helper"
+	"funding-api/user"
 	"net/http"
 	"strconv"
 
@@ -60,5 +62,38 @@ func (h *campaignHandler) GetCampaign(c *gin.Context) {
 	}
 	
 	response := helper.APIResponse("Campaign Detail", http.StatusOK, "Success", campaign.FormatCampaignDetail(campaignDetail))
+	c.JSON(http.StatusOK, response)
+}
+
+// tangkap parameter dari user input struct
+// ambil current user dari jwt/handler
+// panggil service, parameternya input struct (dan juga buat slug)
+// panggil repository untuk simpan data campaign baru
+
+func (h *campaignHandler) CreateCampaign(c *gin.Context) {
+	var input campaign.CreateCampaignInput
+
+	err := c.ShouldBindJSON(&input)
+	fmt.Println("ERRORNYA", err)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"error": errors}
+		response := helper.APIResponse("Failed Create Campaign", http.StatusBadRequest, "Error", errorMessage)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	currentUser := c.MustGet("current_user").(user.User)
+
+	input.User = currentUser
+
+	newCampaign, err := h.service.CreateCampaign(input)
+	if err != nil {
+		response := helper.APIResponse("Failed Create Campaign", http.StatusBadRequest, "Error Upload", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.APIResponse("Success to Create Campaign", http.StatusOK, "Success", campaign.FormatCampaign(newCampaign))
 	c.JSON(http.StatusOK, response)
 }
