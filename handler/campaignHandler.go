@@ -89,11 +89,60 @@ func (h *campaignHandler) CreateCampaign(c *gin.Context) {
 
 	newCampaign, err := h.service.CreateCampaign(input)
 	if err != nil {
-		response := helper.APIResponse("Failed Create Campaign", http.StatusBadRequest, "Error Upload", nil)
+		response := helper.APIResponse("Failed Create Campaign", http.StatusBadRequest, "Error", nil)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
 
 	response := helper.APIResponse("Success to Create Campaign", http.StatusOK, "Success", campaign.FormatCampaign(newCampaign))
 	c.JSON(http.StatusOK, response)
+}
+
+// User masukkan input
+// handler
+// mapping dari input ke input struct (ada 2)
+// input dari user, dan juga input yg ada di url (passing ke server)
+// service 
+// repository update data campaign
+
+func (h *campaignHandler) UpdateCampaign(c *gin.Context) {
+	var inputID campaign.GetCampaignDetailInput
+	
+	err := c.ShouldBindUri(&inputID)
+	if err != nil {
+		response := helper.APIResponse("Failed Update Campaign", http.StatusBadRequest, "Error", nil)
+		
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	
+	var inputData campaign.CreateCampaignInput
+	
+	err = c.ShouldBindJSON(&inputData)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"error": errors}
+		response := helper.APIResponse("Failed Update Campaign", http.StatusBadRequest, "Error", errorMessage)
+		
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	
+	currentUser := c.MustGet("current_user").(user.User)
+	inputData.User = currentUser
+	
+	updateCampaign, err := h.service.UpdateCampaign(inputID, inputData)
+	fmt.Println("Tracking Error: ", err)
+	
+	if err != nil {
+		errorMessage := gin.H{"error": nil}
+		response := helper.APIResponse("Failed Update Campaign", http.StatusBadRequest, "Error", errorMessage)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.APIResponse("Success Update Campaign", http.StatusOK, "Success", updateCampaign)
+
+	c.JSON(http.StatusBadRequest, response)
 }

@@ -7,7 +7,7 @@ import (
 
 type Campaign struct {
 	ID               int `json:"campaign_id" gorm:"column:campaign_id"`
-	UserID           int
+	UserID           int `json:"user_id" gorm:"column:user_id"`
 	CampaignName             string
 	ShortDescription string
 	Description string

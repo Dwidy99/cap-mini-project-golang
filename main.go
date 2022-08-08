@@ -30,23 +30,6 @@ func main() {
 	campaignService := campaign.NewService(campaignRepository)
 	authService := auth.NewService()
 
-	input := campaign.CreateCampaignInput{}
-	input.Name = "Crowd Founding Orang kaya"
-	input.ShortDescription = "Short Crowd Founding"
-	input.Description = "Long Crowd Founding"
-	input.GoalAmount = 1000000
-	input.Perks = "Hadiah satu, dua, dan tiga"
-
-	inputUser, _ := userService.GetUserByID(20)
-
-	input.User = inputUser
-
-	_, err = campaignService.CreateCampaign(input)
-
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
 	userHandler := handler.NewUserHandler(userService, authService)
 	campaignHandler := handler.NewCampaignHandler(campaignService)
 
@@ -62,6 +45,7 @@ func main() {
 	api.GET("/campaigns", campaignHandler.GetCampaigns)
 	api.GET("/campaigns/:id", campaignHandler.GetCampaign)
 	api.POST("/campaigns", authMiddleware(authService, userService), campaignHandler.CreateCampaign)
+	api.PUT("/campaigns/:id", authMiddleware(authService, userService), campaignHandler.UpdateCampaign)
 
 	router.Run()
 
@@ -70,7 +54,7 @@ func main() {
 func authMiddleware(authService auth.Service, userService user.Service) gin.HandlerFunc {
 	return func (c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
-	
+		
 		if !strings.Contains(authHeader, "Bearer") {
 			response := helper.APIResponse("Unauthorized", http.StatusUnauthorized, "Error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
@@ -83,7 +67,7 @@ func authMiddleware(authService auth.Service, userService user.Service) gin.Hand
 		if len(arrayToken) == 2 {
 			tokenString = arrayToken[1]
 		}
-	
+		
 		token, err := authService.ValidateToken(tokenString)
 		if err != nil {
 			response := helper.APIResponse("Unauthorized", http.StatusUnauthorized, "Error", nil)
