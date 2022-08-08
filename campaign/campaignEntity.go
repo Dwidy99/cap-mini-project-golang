@@ -1,6 +1,9 @@
 package campaign
 
-import "time"
+import (
+	"funding-api/user"
+	"time"
+)
 
 type Campaign struct {
 	ID               int `json:"campaign_id" gorm:"column:campaign_id"`
@@ -16,6 +19,7 @@ type Campaign struct {
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
 	CampaignImages []CampaignImage
+	User user.User
 }
 
 type CampaignImage struct {
