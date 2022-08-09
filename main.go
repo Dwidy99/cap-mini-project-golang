@@ -42,10 +42,12 @@ func main() {
 	api.POST("/emailChecker", userHandler.CheckEmailIsAvailability)
 	api.POST("/avatars", authMiddleware(authService, userService), userHandler.UploadAvatar)
 
-	api.GET("/campaigns", campaignHandler.GetCampaigns)
-	api.GET("/campaigns/:id", campaignHandler.GetCampaign)
+	api.GET("/campaigns", authMiddleware(authService, userService), campaignHandler.GetCampaigns)
+	api.GET("/campaigns/:id", authMiddleware(authService, userService), campaignHandler.GetCampaign)
 	api.POST("/campaigns", authMiddleware(authService, userService), campaignHandler.CreateCampaign)
 	api.PUT("/campaigns/:id", authMiddleware(authService, userService), campaignHandler.UpdateCampaign)
+	api.POST("/campaign-images", authMiddleware(authService, userService), campaignHandler.UploadImage)
+	api.DELETE("/campaigns/:id", authMiddleware(authService, userService), campaignHandler.DeleteCampaign)
 
 	router.Run()
 

@@ -76,12 +76,14 @@ func (h *userHandler) Login(c *gin.Context) {
 	}
 
 	loggedIn, err := h.userService.Login(input)
+	
 	if err != nil {
 		helper.FormatValidationError(err)
 		errorMessage := gin.H{"errors": err.Error()}
 
 		response := helper.APIResponse("Login Input Failed", http.StatusUnprocessableEntity, "ERROR", errorMessage)
 		c.JSON(http.StatusUnprocessableEntity, response)
+		return
 	}
 
 	token, err := h.authService.GenerateToken(loggedIn.ID)

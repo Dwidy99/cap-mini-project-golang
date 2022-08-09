@@ -1,6 +1,12 @@
 package helper
 
-import "github.com/go-playground/validator/v10"
+import (
+	"funding-api/campaign"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+)
 
 type Response struct {
 	Meta Meta        `json:"meta"`
@@ -36,4 +42,11 @@ func FormatValidationError(err error) []string {
 	}
 
 	return errors
+}
+
+func GeneratePaginationRequest(context *gin.Context) *campaign.Pagination {
+	// convert query parameter string to int
+	limit, _ := strconv.Atoi(context.DefaultQuery("limit", "5"))
+	page, _ := strconv.Atoi(context.DefaultQuery("page", "0"))
+	return &campaign.Pagination{Limit: limit, Page: page}
 }

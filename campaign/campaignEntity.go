@@ -1,7 +1,6 @@
 package campaign
 
 import (
-	"funding-api/user"
 	"time"
 )
 
@@ -19,7 +18,7 @@ type Campaign struct {
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
 	CampaignImages []CampaignImage
-	User user.User
+	// User user.User `json:"user"`
 }
 
 type CampaignImage struct {

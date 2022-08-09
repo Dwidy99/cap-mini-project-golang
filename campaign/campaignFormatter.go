@@ -2,11 +2,12 @@ package campaign
 
 import (
 	"fmt"
+	"funding-api/user"
 	"strings"
 )
 
 type CampaignFormatter struct {
-	ID               int    `json:"id"`
+	ID               int    `json:"id" gorm:"column:campaign_id"`
 	UserID           int    `json:"user_id"`
 	Name             string `json:"name"`
 	ShortDescription string `json:"short_description"`
@@ -15,6 +16,7 @@ type CampaignFormatter struct {
 	CurrentAmount    int    `json:"current_amount"`
 	Slug             string `json:"slug"`
 	Perks             []string `json:"perks"`
+	User user.User
 }
 
 func FormatCampaign(campaign Campaign) CampaignFormatter {
@@ -27,11 +29,19 @@ func FormatCampaign(campaign Campaign) CampaignFormatter {
 	campaignFormatter.CurrentAmount = campaign.CurrentAmount
 	campaignFormatter.Slug = campaign.Slug
 
+	var perks []string
+
+	for _, perk := range strings.Split(campaign.Perks, ",") {
+		perks = append(perks, strings.TrimSpace(perk))
+	}
+	campaignFormatter.Perks = perks
+
 	campaignFormatter.ImageURL = ""
 
 	if len(campaign.CampaignImages) > 0 {
 		campaignFormatter.ImageURL = campaign.CampaignImages[0].FileName
 	}
+
 	return campaignFormatter
 }
 
@@ -96,13 +106,13 @@ func FormatCampaignDetail(campaign Campaign) CampaignDetailFormatter {
 
 	campaignDetailFormatter.Perks = perks
 
-	user := campaign.User
+	// user := campaign.User
 
-	campaignUserFormatter := CampaignUserFormatter{}
-	campaignUserFormatter.Name = user.Name
-	campaignUserFormatter.ImageURL = user.AvatarFieldName
+	// campaignUserFormatter := CampaignUserFormatter{}
+	// campaignUserFormatter.Name = user.Name
+	// campaignUserFormatter.ImageURL = user.AvatarFieldName
 
-	campaignDetailFormatter.User = campaignUserFormatter
+	// campaignDetailFormatter.User = campaignUserFormatter
 
 	images := []CampaignImageFormatter{}
 
@@ -123,4 +133,13 @@ func FormatCampaignDetail(campaign Campaign) CampaignDetailFormatter {
 	campaignDetailFormatter.Images = images
 
 	return campaignDetailFormatter
+}
+
+type Pagination struct {
+	Limit     int         `json:"limit"`
+	Page      int         `json:"page"`
+	TotalRows int64       `json:"total_rows"`
+	FromRow   int         `json:"from_row"`
+	ToRow     int         `json:"to_row"`
+	Rows      interface{} `json:"rows"`
 }

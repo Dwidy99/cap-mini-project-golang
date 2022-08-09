@@ -34,7 +34,7 @@ func (i *service) RegisterUser(input RegisterUserInput) (User, error) {
 	}
 	user.Password_hash = string(password_hash)
 	user.Role = "user"
-	user.Token = "sasasasasa"
+	user.Token = "tokenEmilRecovery"
 	
 	newUser, err := i.repository.Save(user)
 	if err != nil {
@@ -50,11 +50,12 @@ func (s *service) Login(input LoginInput) (User, error) {
 	password := input.Password
 
 	user, err := s.repository.FindByEmail(email)
+	
 	if err != nil {
-		return user, nil
+		return user, err
 	}
 
-	if user.ID == 0 {
+	if user.Email == "" {
 		return user, errors.New("No user found on that email")
 	}
 
