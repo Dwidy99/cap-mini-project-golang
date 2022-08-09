@@ -1,6 +1,6 @@
 # Mini Project Golang Celerates CAP 2022
 
-1 domain (foods), 1 domain for register and login (member).
+1 domain (campaigns), 1 domain for register and login (users).
 
 Creating a 2 domain REST API with gin, gorm, PostgreSQL.
 
@@ -10,7 +10,7 @@ Creating a 2 domain REST API with gin, gorm, PostgreSQL.
 - Login User
 - Register User
 - JWT Token
-- Hexagonal architecture
+- Service Object Pattern
 
 ## Postgre SQL
 
