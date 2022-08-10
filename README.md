@@ -16,7 +16,7 @@ Creating a 2 domain REST API with gin, gorm, PostgreSQL.
 
 SQL (Query Language) used in this project
 
-### members
+### users
 
 ```sql
 DROP TABLE IF EXISTS "users";
@@ -34,7 +34,7 @@ CREATE TABLE "users" (
 );
 ```
 
-### foods
+### campaigns
 
 ```sql
 DROP TABLE IF EXISTS "campaigns";
@@ -272,7 +272,7 @@ There are 9 endpoints that can be used, including:
 /api/v1/users/register
 ```
 
-### BODY POST MEMBERS
+### BODY POST USERS
 
 ```
 {
@@ -283,7 +283,7 @@ There are 9 endpoints that can be used, including:
 }
 ```
 
-### EXAMPLE RESULT POST MEMBERS
+### EXAMPLE RESULT POST USERS
 
 ```
 {
