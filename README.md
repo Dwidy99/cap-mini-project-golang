@@ -1,4 +1,4 @@
-# Mini Project Golang Celerates CAP 2022
+# Mini Project Golang 2022
 
 1 domain (campaigns), 1 domain for register and login (users).
 
