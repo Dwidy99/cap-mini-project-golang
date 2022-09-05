@@ -144,7 +144,7 @@ func (h *campaignHandler) CreateCampaign(c *gin.Context) {
 		return
 	}
 
-	response := helper.APIResponse("Success to Create Campaign", http.StatusOK, "Success", newCampaign)
+	response := helper.APIResponse("Success to Create Campaign", http.StatusOK, "Success", campaign.FormatCampaign(newCampaign))
 	c.JSON(http.StatusOK, response)
 }
 
@@ -185,16 +185,16 @@ func (h *campaignHandler) UpdateCampaign(c *gin.Context) {
 	fmt.Println("Tracking Error: ", err)
 	
 	if err != nil {
-		errorMessage := gin.H{"error": nil}
-		response := helper.APIResponse("Failed Update Campaign", http.StatusBadRequest, "Error", errorMessage)
+		errorMessage := gin.H{"error": err}
+		response := helper.APIResponse("Failed Update Campaign", http.StatusForbidden, "Error", errorMessage)
 
-		c.JSON(http.StatusBadRequest, response)
+		c.JSON(http.StatusForbidden, response)
 		return
 	}
 
 	response := helper.APIResponse("Success Update Campaign", http.StatusOK, "Success", updateCampaign)
 
-	c.JSON(http.StatusBadRequest, response)
+	c.JSON(http.StatusOK, response)
 }
 
 // handler

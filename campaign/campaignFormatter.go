@@ -2,7 +2,6 @@ package campaign
 
 import (
 	"fmt"
-	"funding-api/user"
 	"strings"
 )
 
@@ -15,8 +14,6 @@ type CampaignFormatter struct {
 	GoalAmount       int    `json:"goal_amount"`
 	CurrentAmount    int    `json:"current_amount"`
 	Slug             string `json:"slug"`
-	Perks             []string `json:"perks"`
-	User user.User
 }
 
 func FormatCampaign(campaign Campaign) CampaignFormatter {
@@ -29,14 +26,6 @@ func FormatCampaign(campaign Campaign) CampaignFormatter {
 	campaignFormatter.CurrentAmount = campaign.CurrentAmount
 	campaignFormatter.Slug = campaign.Slug
 
-	var perks []string
-
-	for _, perk := range strings.Split(campaign.Perks, ",") {
-		perks = append(perks, strings.TrimSpace(perk))
-	}
-	campaignFormatter.Perks = perks
-
-	campaignFormatter.ImageURL = ""
 
 	if len(campaign.CampaignImages) > 0 {
 		campaignFormatter.ImageURL = campaign.CampaignImages[0].FileName

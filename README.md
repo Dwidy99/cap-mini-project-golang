@@ -212,11 +212,11 @@ There are 9 endpoints that can be used, including:
 
 ```
 {
-    "name": "Sebuah Campaign 5",
-    "short_description": "Campaign Sangat Singkat 5",
-    "description": "Campaign Description panjang 5",
-    "goal_amount": 15550,
-    "perks": "Keuntungan, kali, lipat 5"
+    "name": "Sebuah Campaign Keren",
+    "short_description": "Campaign Sangat Keren",
+    "description": "Campaign Description Keren",
+    "goal_amount": 189000,
+    "perks": "Campaign untuk kemanusiaan yang keren"
 }
 ```
 
@@ -230,19 +230,14 @@ There are 9 endpoints that can be used, including:
         "status": "Success"
     },
     "data": {
-        "campaign_id": 46,
-        "user_id": 14,
-        "CampaignName": "Sebuah Campaign 5",
-        "ShortDescription": "Campaign Sangat Singkat 5",
-        "Description": "Campaign Description panjang 5",
-        "Perks": "Keuntungan, kali, lipat 5",
-        "backer_count": 0,
-        "GoalAmount": 15550,
-        "CurrentAmount": 0,
-        "Slug": "sebuah-campaign-5-14",
-        "CreatedAt": "2022-08-09T21:52:04.211147+07:00",
-        "UpdatedAt": "2022-08-09T21:52:04.211147+07:00",
-        "CampaignImages": null
+        "id": 51,
+        "user_id": 13,
+        "name": "Sebuah Campaign Keren",
+        "short_description": "Campaign Sangat Keren",
+        "image_url": "",
+        "goal_amount": 189000,
+        "current_amount": 0,
+        "slug": "sebuah-campaign-keren-13"
     }
 }
 ```
